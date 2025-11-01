@@ -32,35 +32,39 @@ public class GameService {
 
     public synchronized GameState proccessMove(Move move) {
         if (!move.getPlayerId().equals(game.getCurrentPlayer())) {
-            System.out.println("No es tu turno");
+            throw new IllegalStateException("No es tu turno");
         }
 
         if (game.getSquares()[move.getPosition()] != null) {
-            System.out.println("Casilla Ocupada");
+            throw new IllegalStateException("Casilla ocupada");
         }
 
         if (game.getStatus() != GameStatus.PLAYING) {
-            System.out.println("No hay juego en curso");
+            throw new IllegalStateException("El juego no está en curso");
         }
 
         String[] squares = game.getSquares();
+        squares[move.getPosition()] = move.getSymbol();
         game.setSquares(squares);
         game.setStepNumber(game.getStepNumber() + 1);
 
         String winner = calculateWinner(squares);
-        if (game.getWinner() == null) {
+        if (winner != null) {
             game.setWinner(winner);
             game.setStatus(GameStatus.FINISHED);
         } else if (game.getStepNumber() == 9) {
             game.setWinner("Draw");
             game.setStatus(GameStatus.FINISHED);
         } else {
+            
             game.setxIsNext(!game.isxIsNext());
             game.setCurrentPlayer(
-                    move.getPlayerId().equals(game.getPlayer1())
-                            ? game.getPlayer2()
-                            : game.getPlayer1());
+                move.getPlayerId().equals(game.getPlayer1()) 
+                    ? game.getPlayer2() 
+                    : game.getPlayer1()
+            );
         }
+
         return game;
     }
 
