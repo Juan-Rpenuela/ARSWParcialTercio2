@@ -19,7 +19,7 @@ public class GameService {
         return this.game;
     }
 
-    public synchronized GameState addPlayer(String playerId) {
+    public synchronized GameState addPlayer(String playerId, String playerName) {
         if (this.game.getPlayer1() == null) {
             this.game.setPlayer1(playerId);
             this.game.setCurrentPlayer(playerId);
@@ -64,4 +64,41 @@ public class GameService {
         return game;
     }
 
+    public synchronized GameState resetGame() {
+        String player1 = game.getPlayer1();
+        String player2 = game.getPlayer2();
+        
+        game = new GameState();
+        game.setPlayer1(player1);
+        game.setPlayer2(player2);
+        game.setCurrentPlayer(player1);
+        
+        if (player1 != null && player2 != null) {
+            game.setStatus(GameStatus.PLAYING);
+        }
+        
+        return game;
+    }
+
+    private String calculateWinner(String[] squares) {
+        int[][] winnersLines = {
+            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, 
+            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, 
+            {0, 4, 8}, {2, 4, 6}             
+        };
+
+        for (int[] line : winnersLines) {
+            String a = squares[line[0]];
+            String b = squares[line[1]];
+            String c = squares[line[2]];
+            
+            if (a != null && a.equals(b) && a.equals(c)) {
+                return a;
+            }
+        }
+        
+        return null;
+    }
 }
+
+
