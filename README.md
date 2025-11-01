@@ -37,3 +37,11 @@
    - React actualiza estado local
    - Re-renderiza tablero
    - Cambia indicador de turno
+
+## Funcionamiento
+# Jugador 1
+
+![Player1](images/player1.png)
+
+# Jugador 2
+![Player2](images/player2.png)
